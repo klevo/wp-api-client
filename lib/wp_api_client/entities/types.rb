@@ -4,6 +4,7 @@ module WpApiClient
       User,
       Image,
       Post,
+      Comment,
       Meta,
       Term,
       Taxonomy,
