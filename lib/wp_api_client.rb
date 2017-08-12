@@ -7,6 +7,7 @@ require "wp_api_client/entities/base"
 
 require "wp_api_client/entities/user"
 require "wp_api_client/entities/post"
+require "wp_api_client/entities/comment"
 require "wp_api_client/entities/meta"
 require "wp_api_client/entities/taxonomy"
 require "wp_api_client/entities/term"

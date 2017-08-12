@@ -15,6 +15,33 @@ module WpApiClient
       end
     end
 
+    def post(url, params = {})
+      configuration = WpApiClient.configuration
+      
+      conn = Faraday.new(url: configuration.endpoint) do |faraday|
+        faraday.basic_auth(configuration.application_passwords_auth[:username], configuration.application_passwords_auth[:password])
+
+        if configuration.debug
+          faraday.response :logger
+          faraday.use :instrumentation
+        end
+
+        if configuration.proxy
+          faraday.proxy configuration.proxy
+        end
+
+        faraday.headers['Content-Type'] = 'application/json'
+
+        faraday.use Faraday::Response::RaiseError
+        faraday.response :json, :content_type => /\bjson$/
+        faraday.adapter  :typhoeus
+      end
+
+      response = conn.post(api_path_from(url), JSON.dump(params))
+      @headers = response.headers
+      native_representation_of response.body
+    end
+
     def concurrently
       @concurrent_client ||= ConcurrentClient.new(@connection)
       yield @concurrent_client
